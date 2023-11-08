@@ -2,7 +2,7 @@ CC=gcc
 COPT=-Wall -g -O0
 
 all: main.o nids.o output.o base64.o hash.o http_parser.o stream.o
-	$(CC) $(COPT) -o simpleNids main.o nids.o output.o base64.o hash.o http_parser.o stream.o  -Wl,-rpath=./lib/ -lnids -lpcap -lpthread -ljson -lcrypto -lrdkafka -lz -lrt
+	$(CC) $(COPT) -o simpleNids main.o nids.o output.o base64.o hash.o http_parser.o stream.o  -Wl -lnids -lpcap -lpthread -lcrypto -lz -ljson-c
 
 nids.o: nids.c nids.h
 	$(CC) $(COPT) -c nids.c

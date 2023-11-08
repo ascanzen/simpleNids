@@ -27,7 +27,7 @@ char* unzip_func(unsigned char* source, unsigned long len)
   int err;
   z_stream data_stream;
 
-  uLong compressLen, 
+  uLong compressLen; 
   uLong uncompressLen;
   Byte compress[RESPONSE_DATA_MAXSIZE] = {0};
   Byte uncompress[RESPONSE_DATA_MAXSIZE] = {0};
@@ -120,7 +120,7 @@ void sn_prepare_output(struct stream *s) {
   if (s->request_data_size > 0) 
   {
     s->request_data[s->request_data_size] = '\0';
-    if (base64_output == 1) 
+    if (sn_base64_output == 1) 
     {
       t = Base64Encode(s->request_data, s->request_data_size);
       json_object_object_add(s->json, "request_body", json_object_new_string(t));
@@ -135,7 +135,7 @@ void sn_prepare_output(struct stream *s) {
   {
     s->response_data[s->response_data_size] = '\0';
     //response body输出base64编码
-    if (base64_output == 1) 
+    if (sn_base64_output == 1) 
     {
       t = Base64Encode(s->response_data, s->response_data_size);
       json_object_object_add(s->json, "response_body", json_object_new_string(t));
@@ -178,7 +178,7 @@ int on_url(http_parser* _, const char* at, size_t length) {
   stream->url[real_length] = '\0';
   stream->is_http = 1;
   json_object_object_add(stream->json, "request_method", json_object_new_string(http_method_str(stream->request_parser.method)));
-  if (base64_output == 1) {
+  if (sn_base64_output == 1) {
     t = Base64Encode(stream->url, real_length);
     json_object_object_add(stream->json, "request_url", json_object_new_string(t));
     free(t);
@@ -210,7 +210,7 @@ int on_request_header_value(http_parser* _, const char* at, size_t length) {
   if(stream->request_cache[0] == '\0') return 0;
   memcpy(&value, at, real_length);
   value[real_length] = '\0';
-  if (base64_output == 1) {
+  if (sn_base64_output == 1) {
     t = Base64Encode(value, real_length);
     json_object_object_add(stream->json, stream->request_cache, json_object_new_string(t));
     free(t);
@@ -246,7 +246,7 @@ int on_response_header_value(http_parser* _, const char* at, size_t length) {
   if(stream->response_cache[0] == '\0') return 0;
   memcpy(&value, at, real_length);
   value[real_length] = '\0';
-  if (base64_output == 1) {
+  if (sn_base64_output == 1) {
     t = Base64Encode(value, real_length);
     json_object_object_add(stream->json, stream->response_cache, json_object_new_string(t));
     free(t);

@@ -85,7 +85,7 @@ int main(int argc, char **argv)
             sn_tcp_capture = 1;
             break;
         case 'U':
-            udp_capture = 1;
+            sn_udp_capture = 1;
             break;
         case 'F':
             sn_ip_frag_capture = 1;
@@ -111,9 +111,10 @@ int main(int argc, char **argv)
     }
 
     printf("simpleNids trying to read from '%s'...\n", device_or_pcap);
-    sn_result = sm_nids_device(device_or_pcap);
+    sn_result = sn_nids_device(device_or_pcap);
 
     if (sn_result){printf("simpleNids failed....\n");return (EXIT_FAILURE);}
     else{printf("simpleNids finished...\n");return (EXIT_SUCCESS);}
     return (EXIT_FAILURE);
+
 }
