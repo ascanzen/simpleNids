@@ -27,3 +27,22 @@ main.o: main.c config.h
 
 clean:
 	rm -f *.o *~ simpleNids
+
+start:
+	SUDO_ASKPASS=./pw.sh sudo -A ./simpleNids -TUH  -i en0
+
+libnet:
+	tar xf libnet-1.3.tar.gz
+	cd libnet-1.3/ && ./configure && make &&sudo make install
+
+ljson:
+	git clone https://github.com/json-c/json-c.git
+	mkdir json-c-build
+	cd json-c-build
+	cmake ../json-c   # See CMake section below for custom arguments	
+	make
+	sudo make install
+
+build_env:
+	@make libnet
+	@make ljson

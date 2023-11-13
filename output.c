@@ -7,9 +7,16 @@
 #include <time.h>
 #include <stdio.h>
 // #include <librdkafka/rdkafka.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+
 
 #include "output.h"
 #include "config.h"
+
+#define UDP_HOST "127.0.0.1"
+#define UDP_PORT 20240
 
 // int partition = RD_KAFKA_PARTITION_UA;
 // rd_kafka_topic_t *rktt;
@@ -84,5 +91,22 @@ int output(struct json_object *resJson) {
     json_object_object_add(resJson, "time", json_object_new_int(tt));
 
     const char *kafkaMsg = json_object_to_json_string(resJson);
-    printf("%s\n", kafkaMsg);
+    // printf("%s\n", kafkaMsg);
+
+    // send to udp port
+    int sockfd;
+    struct sockaddr_in servaddr;
+    sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+    if (sockfd == -1) {
+        printf("socket creation failed...\n");
+        return -1;
+    }
+    bzero(&servaddr, sizeof(servaddr));
+    servaddr.sin_family = AF_INET;
+    servaddr.sin_addr.s_addr = inet_addr(UDP_HOST);
+    servaddr.sin_port = htons(UDP_PORT);
+    sendto(sockfd, (const char *)kafkaMsg, strlen(kafkaMsg), 0, (const struct sockaddr *) &servaddr, sizeof(servaddr));
+    close(sockfd);
+    return 0;
+    
 }
