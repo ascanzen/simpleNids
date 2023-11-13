@@ -45,6 +45,7 @@ ljson:
 
 libnids:
 	git clone https://github.com/MITRECND/libnids
+	cd libnids
 	make all
 	make install
 
