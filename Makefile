@@ -43,6 +43,12 @@ ljson:
 	make
 	sudo make install
 
+libnids:
+	git clone https://github.com/MITRECND/libnids
+	make all
+	make install
+
 build_env:
+	@make libnids
 	@make libnet
 	@make ljson
